@@ -10,7 +10,7 @@ import (
 	"github.com/elgopher/piweb/internal/window"
 )
 
-//go:embed "backend.js"
+//go:embed "gameloop.js"
 var backendJS []byte
 
 func Run() {

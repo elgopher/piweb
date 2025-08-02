@@ -10,30 +10,16 @@ import (
 	"syscall/js"
 )
 
-// api provides functions available in backend.js
-var api = map[string]any{
-	"screenSize": js.FuncOf(screenSize),
-	"tps":        js.FuncOf(tps),
-	"init":       js.FuncOf(piInit),
-	"update":     js.FuncOf(update),
-	"draw":       js.FuncOf(draw),
+// api provides functions available in JavaScript code
+var api = window.NewObject()
+
+func init() {
+	api.Set("tps", js.ValueOf(pi.TPS()))
+	api.Set("init", js.FuncOf(piInit))
+	api.Set("tick", js.FuncOf(tick))
 }
 
-func screenSize(this js.Value, args []js.Value) interface{} {
-	screen := pi.Screen()
-
-	o := window.NewObject()
-	o.Set("w", screen.W())
-	o.Set("h", screen.H())
-
-	return o
-}
-
-func tps(this js.Value, args []js.Value) interface{} {
-	return pi.TPS()
-}
-
-func piInit(this js.Value, args []js.Value) interface{} {
+func piInit(this js.Value, args []js.Value) any {
 	if pi.Init != nil {
 		pi.Init()
 	}
@@ -42,14 +28,17 @@ func piInit(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
-func update(this js.Value, args []js.Value) interface{} {
+func tick(this js.Value, args []js.Value) any {
+	// make a snapshot of pi values to avoid memory allocation
+	// on each call from JS to GO.
+	api.Set("tps", js.ValueOf(pi.TPS()))
+
+	piloop.Target().Publish(piloop.EventFrameStart)
+
 	pi.Update()
 	piloop.Target().Publish(piloop.EventUpdate)
-	return nil
-}
-
-func draw(this js.Value, args []js.Value) interface{} {
 	pi.Draw()
 	piloop.Target().Publish(piloop.EventDraw)
+
 	return nil
 }

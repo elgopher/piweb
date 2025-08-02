@@ -20,21 +20,21 @@ func main() {
 		log.Print("Game initialized")
 	}
 	piloop.Target().Subscribe(piloop.EventInit, func(event piloop.Event, handler pievent.Handler) {
-		log.Println("EventInit received")
+		//log.Println("EventInit received")
 	})
 
 	pi.Update = func() {
-		log.Print("pi.Update")
+		//log.Print("pi.Update")
 	}
 	piloop.Target().Subscribe(piloop.EventUpdate, func(event piloop.Event, handler pievent.Handler) {
-		log.Println("EventUpdate received")
+		//log.Println("EventUpdate received")
 	})
 
 	pi.Draw = func() {
-		log.Print("pi.Draw")
+		//log.Print("pi.Draw")
 	}
 	piloop.Target().Subscribe(piloop.EventDraw, func(event piloop.Event, handler pievent.Handler) {
-		log.Println("EventDraw received")
+		//log.Println("EventDraw received")
 	})
 
 	piweb.Run()
