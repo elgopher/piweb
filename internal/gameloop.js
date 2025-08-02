@@ -5,44 +5,43 @@ var api; // all Go functions are available here
 
 // Ticker runs a callback on every tick based on pi.TPS
 class Ticker {
-    tickStartTime = 0
+    tickStartTime = 0;
 
     constructor(tickCallback) {
-        this.tickCallback = tickCallback
-        this.frame = this.frame.bind(this) // needed because executed from RAF
+        this.tickCallback = tickCallback;
+        this.frame = this.frame.bind(this); // needed because executed from RAF
     }
 
     start() {
-        this.tickStartTime = performance.now()
-        requestAnimationFrame(this.frame)
+        this.tickStartTime = performance.now();
+        requestAnimationFrame(this.frame);
     }
 
     frame() {
-        const tickDuration = 1000 / api.tps
-        const now = performance.now()
+        const tickDuration = 1000 / api.tps;
+        const now = performance.now();
 
         const elapsed = now - this.tickStartTime;
 
-        let ticks = Math.round(elapsed / tickDuration)
-        let actualTicks = ticks
+        let ticks = Math.round(elapsed / tickDuration);
+        let actualTicks = ticks;
         if (ticks > api.tps) {
-            console.warn("Too many ticks missed: %d. Dropping %d ticks", ticks, ticks - api.tps)
-            actualTicks = api.tps
+            console.warn("Too many ticks missed: %d. Dropping %d ticks", ticks, ticks - api.tps);
+            actualTicks = api.tps;
         }
         if (actualTicks > 0) {
-            this.tickCallback(actualTicks)
-            this.tickStartTime = this.tickStartTime + tickDuration * ticks
+            this.tickCallback(actualTicks);
+            this.tickStartTime = this.tickStartTime + tickDuration * ticks;
         }
 
-        requestAnimationFrame(this.frame)
+        requestAnimationFrame(this.frame);
     }
 }
 
 
 (function startGameLoop() {
-    api.init()
+    api.init();
 
-    const ticker = new Ticker(api.tick)
-    ticker.start()
-
+    const ticker = new Ticker(api.tick);
+    ticker.start();
 })()

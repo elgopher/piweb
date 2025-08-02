@@ -6,24 +6,26 @@ package internal
 import (
 	"github.com/elgopher/pi"
 	"github.com/elgopher/pi/piloop"
-	"github.com/elgopher/piweb/internal/window"
 	"syscall/js"
 	"time"
 )
 
 // api provides functions available in JavaScript code
-var api = window.NewObject()
+var api = window.Get("Object").New()
 
 func init() {
 	api.Set("init", js.FuncOf(piInit))
 	api.Set("tick", js.FuncOf(tick))
-	snapshotPi()
 }
 
 // snapshotPi makes a snapshot of Pi values to avoid memory allocation
 // on each call from JS to GO.
 func snapshotPi() {
 	api.Set("tps", js.ValueOf(pi.TPS()))
+
+	screen := pi.Screen()
+	api.Set("screenWidth", screen.W())
+	api.Set("screenHeight", screen.H())
 }
 
 func piInit(this js.Value, args []js.Value) any {
@@ -54,6 +56,10 @@ func tick(this js.Value, args []js.Value) any {
 			if !skipNextDraw {
 				pi.Draw()
 				piloop.Target().Publish(piloop.EventDraw)
+
+				data := window.Get("imageData").Get("data")
+				CopyCanvasToUint8ClampedArray(data, pi.Screen())
+				window.Call("updateCanvas")
 			} else {
 				skipNextDraw = false
 			}

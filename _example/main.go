@@ -13,8 +13,8 @@ func main() {
 	pi.SetScreenSize(128, 128)
 	pi.SetColor(7)
 	pi.RectFill(33, 30, 50, 50)
-	pi.SetColor(1)
-	picofont.Print("piweb", 0, 0)
+	pi.SetColor(3)
+	picofont.Print("PIWEB", 1, 1)
 
 	pi.Init = func() {
 		log.Print("Game initialized")

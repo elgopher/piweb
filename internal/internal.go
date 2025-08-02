@@ -7,15 +7,27 @@ import (
 	_ "embed"
 	"github.com/elgopher/pi/piaudio"
 	"github.com/elgopher/piweb/internal/audio"
-	"github.com/elgopher/piweb/internal/window"
+	"syscall/js"
 )
 
-//go:embed "gameloop.js"
-var backendJS []byte
+var (
+	//go:embed "gameloop.js"
+	gameLoopJS []byte
+
+	//go:embed "canvas.js"
+	canvasJS []byte
+)
+
+var window = js.Global()
 
 func Run() {
 	piaudio.Backend = &audio.Backend{}
 
 	window.Set("api", api)
-	window.Eval(string(backendJS))
+	snapshotPi()
+
+	window.Call("eval", string(gameLoopJS))
+	window.Call("eval", string(canvasJS))
+
+	window.Call("prepareCanvas")
 }
