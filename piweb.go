@@ -7,11 +7,10 @@ package piweb
 
 import (
 	"github.com/elgopher/piweb/internal"
-	"time"
 )
 
 func Run() {
 	internal.Run()
-
-	time.Sleep(time.Hour)
+	// do not close the wasm module (for now):
+	select {}
 }

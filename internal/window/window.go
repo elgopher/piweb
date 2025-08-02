@@ -10,3 +10,11 @@ var window = js.Global()
 func Eval(code string) {
 	window.Call("eval", code)
 }
+
+func Set(p string, x any) {
+	window.Set(p, x)
+}
+
+func NewObject(args ...any) js.Value {
+	return window.Get("Object").New(args...)
+}
