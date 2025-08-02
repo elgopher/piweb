@@ -42,28 +42,33 @@ var skipNextDraw bool
 func tick(this js.Value, args []js.Value) any {
 	started := time.Now()
 
-	snapshotPi()
+	ticks := args[0].Int()
 
-	piloop.Target().Publish(piloop.EventFrameStart)
+	for i := 0; i < ticks; i++ {
+		piloop.Target().Publish(piloop.EventFrameStart)
 
-	pi.Update()
-	piloop.Target().Publish(piloop.EventUpdate)
+		pi.Update()
+		piloop.Target().Publish(piloop.EventUpdate)
 
-	if !skipNextDraw {
-		pi.Draw()
-		piloop.Target().Publish(piloop.EventDraw)
-	} else {
-		skipNextDraw = false
+		if i == ticks-1 { // draw only on the last tick
+			if !skipNextDraw {
+				pi.Draw()
+				piloop.Target().Publish(piloop.EventDraw)
+			} else {
+				skipNextDraw = false
+			}
+		}
+
+		pi.Time += 1.0 / float64(pi.TPS())
+		pi.Frame++
 	}
 
-	tickDuration := 1.0 / float64(pi.TPS())
 	elapsed := time.Since(started).Seconds()
-	if elapsed > tickDuration {
+	if elapsed > 1.0/float64(pi.TPS()) {
 		skipNextDraw = true // game is too slow. Try to keep up by discarding next pi.Draw()
 	}
 
-	pi.Time += tickDuration
-	pi.Frame++
+	snapshotPi()
 
 	return nil
 }

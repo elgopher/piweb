@@ -24,13 +24,14 @@ class Ticker {
         const elapsed = now - this.tickStartTime;
 
         let ticks = Math.round(elapsed / tickDuration)
-        if (ticks > 60) {
-            console.warn("Too many ticks missed: %d. Dropping %d ticks", ticks, ticks - 60)
-            ticks = 60
+        let actualTicks = ticks
+        if (ticks > api.tps) {
+            console.warn("Too many ticks missed: %d. Dropping %d ticks", ticks, ticks - api.tps)
+            actualTicks = api.tps
         }
-        for (let i = 0; i < ticks; i++) {
-            this.tickCallback()
-            this.tickStartTime = this.tickStartTime + tickDuration
+        if (actualTicks > 0) {
+            this.tickCallback(actualTicks)
+            this.tickStartTime = this.tickStartTime + tickDuration * ticks
         }
 
         requestAnimationFrame(this.frame)
