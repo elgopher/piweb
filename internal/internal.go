@@ -20,7 +20,10 @@ var (
 
 var window = js.Global()
 
-var keyboard = StartKeyboard()
+var (
+	keyboard = StartKeyboard()
+	gamepad  = StartGamepad()
+)
 
 func Run() {
 	piaudio.Backend = &audio.Backend{}

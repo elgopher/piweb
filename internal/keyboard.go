@@ -22,60 +22,64 @@ type Keyboard struct {
 }
 
 func (k *Keyboard) Start() {
-	window.Call("addEventListener", "keydown", js.FuncOf(func(this js.Value, args []js.Value) any {
-		code := args[0].Get("code").String()
-		key, found := keymap[code]
-		if !found {
-			return nil
-		}
+	window.Call("addEventListener", "keydown", js.FuncOf(k.keyDown))
+	window.Call("addEventListener", "keyup", js.FuncOf(k.keyUp))
+	window.Call("addEventListener", "blur", js.FuncOf(k.blur))
+}
 
-		repeat := args[0].Get("repeat").Bool()
-		if repeat == true {
-			return nil
-		}
-
-		event := pikey.Event{Type: pikey.EventDown, Key: key}
-		k.events = append(k.events, event)
-		k.pressedKeys[key] = struct{}{}
-
-		if virtualKey, virtualKeyFound := virtualKeys[key]; virtualKeyFound {
-			additionalEvent := pikey.Event{Type: pikey.EventDown, Key: virtualKey}
-			k.events = append(k.events, additionalEvent)
-			k.pressedKeys[virtualKey] = struct{}{}
-		}
-
+func (k *Keyboard) keyDown(this js.Value, args []js.Value) any {
+	code := args[0].Get("code").String()
+	key, found := keymap[code]
+	if !found {
 		return nil
-	}))
+	}
 
-	window.Call("addEventListener", "keyup", js.FuncOf(func(this js.Value, args []js.Value) any {
-		code := args[0].Get("code").String()
-		key, found := keymap[code]
-		if !found {
-			return nil
-		}
+	repeat := args[0].Get("repeat").Bool()
+	if repeat == true {
+		return nil
+	}
 
+	event := pikey.Event{Type: pikey.EventDown, Key: key}
+	k.events = append(k.events, event)
+	k.pressedKeys[key] = struct{}{}
+
+	if virtualKey, virtualKeyFound := virtualKeys[key]; virtualKeyFound {
+		additionalEvent := pikey.Event{Type: pikey.EventDown, Key: virtualKey}
+		k.events = append(k.events, additionalEvent)
+		k.pressedKeys[virtualKey] = struct{}{}
+	}
+
+	return nil
+}
+
+func (k *Keyboard) keyUp(this js.Value, args []js.Value) any {
+	code := args[0].Get("code").String()
+	key, found := keymap[code]
+	if !found {
+		return nil
+	}
+
+	event := pikey.Event{Type: pikey.EventUp, Key: key}
+	k.events = append(k.events, event)
+	delete(k.pressedKeys, key)
+
+	if virtualKey, virtualKeyFound := virtualKeys[key]; virtualKeyFound {
+		additionalEvent := pikey.Event{Type: pikey.EventUp, Key: virtualKey}
+		k.events = append(k.events, additionalEvent)
+		delete(k.pressedKeys, virtualKey)
+	}
+
+	return nil
+}
+
+func (k *Keyboard) blur(this js.Value, args []js.Value) any {
+	for key := range k.pressedKeys {
 		event := pikey.Event{Type: pikey.EventUp, Key: key}
 		k.events = append(k.events, event)
-		delete(k.pressedKeys, key)
+	}
+	clear(k.pressedKeys)
 
-		if virtualKey, virtualKeyFound := virtualKeys[key]; virtualKeyFound {
-			additionalEvent := pikey.Event{Type: pikey.EventUp, Key: virtualKey}
-			k.events = append(k.events, additionalEvent)
-			delete(k.pressedKeys, virtualKey)
-		}
-
-		return nil
-	}))
-
-	window.Call("addEventListener", "blur", js.FuncOf(func(this js.Value, args []js.Value) any {
-		for key := range k.pressedKeys {
-			event := pikey.Event{Type: pikey.EventUp, Key: key}
-			k.events = append(k.events, event)
-		}
-		clear(k.pressedKeys)
-
-		return nil
-	}))
+	return nil
 }
 
 var keymap = map[string]pikey.Key{

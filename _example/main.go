@@ -6,6 +6,7 @@ import (
 	"github.com/elgopher/pi/pievent"
 	"github.com/elgopher/pi/pikey"
 	"github.com/elgopher/pi/piloop"
+	"github.com/elgopher/pi/pipad"
 	"github.com/elgopher/piweb"
 	"log"
 	"math/rand"
@@ -42,6 +43,14 @@ func main() {
 	})
 
 	pikey.Target().SubscribeAll(func(event pikey.Event, handler pievent.Handler) {
+		log.Println(event)
+	})
+
+	pipad.ConnectionTarget().SubscribeAll(func(event pipad.EventConnection, handler pievent.Handler) {
+		log.Println(event)
+	})
+
+	pipad.ButtonTarget().SubscribeAll(func(event pipad.EventButton, handler pievent.Handler) {
 		log.Println(event)
 	})
 

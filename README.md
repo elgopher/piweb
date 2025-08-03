@@ -39,5 +39,14 @@ These improvements are possible thanks to:
 
 ## 🚧 Status
 
-> This is an experimental project.
-> Most features are not ready.
+> This is an experimental project. Some features are ready, some are not. Some features are buggy and generally not all possible platforms are supported:
+
+* [x] graphics rendering using Canvas2D
+* [x] keyboard support
+* [x] gamepad support
+* [ ] mouse support
+* [ ] debug mode support
+* [ ] on-screen keyboard support
+* [x] desktop web browsers - Chrome, Firefox, Edge, Safari etc.
+* [ ] mobile web browsers - Safari, Chrome
+* [ ] audio support
