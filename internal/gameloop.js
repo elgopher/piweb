@@ -5,23 +5,22 @@ var api; // all Go functions are available here
 
 // Ticker runs a callback on every tick based on pi.TPS
 class Ticker {
-    tickStartTime = 0;
+    #tickStartTime = 0;
 
     constructor(tickCallback) {
         this.tickCallback = tickCallback;
-        this.frame = this.frame.bind(this); // needed because executed from RAF
     }
 
     start() {
-        this.tickStartTime = performance.now();
-        requestAnimationFrame(this.frame);
+        this.#tickStartTime = performance.now();
+        requestAnimationFrame(this.#frame);
     }
 
-    frame() {
+    #frame = () => {
         const tickDuration = 1000 / api.tps;
         const now = performance.now();
 
-        const elapsed = now - this.tickStartTime;
+        const elapsed = now - this.#tickStartTime;
 
         let ticks = Math.round(elapsed / tickDuration);
         let actualTicks = ticks;
@@ -31,10 +30,10 @@ class Ticker {
         }
         if (actualTicks > 0) {
             this.tickCallback(actualTicks);
-            this.tickStartTime = this.tickStartTime + tickDuration * ticks;
+            this.#tickStartTime = this.#tickStartTime + tickDuration * ticks;
         }
 
-        requestAnimationFrame(this.frame);
+        requestAnimationFrame(this.#frame);
     }
 }
 

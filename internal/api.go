@@ -49,6 +49,11 @@ func tick(this js.Value, args []js.Value) any {
 	for i := 0; i < ticks; i++ {
 		piloop.Target().Publish(piloop.EventFrameStart)
 
+		// handling input only once
+		if i == 0 {
+			keyboard.Update()
+		}
+
 		pi.Update()
 		piloop.Target().Publish(piloop.EventUpdate)
 

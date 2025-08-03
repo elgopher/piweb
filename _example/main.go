@@ -4,9 +4,11 @@ import (
 	"github.com/elgopher/pi"
 	"github.com/elgopher/pi/picofont"
 	"github.com/elgopher/pi/pievent"
+	"github.com/elgopher/pi/pikey"
 	"github.com/elgopher/pi/piloop"
 	"github.com/elgopher/piweb"
 	"log"
+	"math/rand"
 )
 
 func main() {
@@ -31,10 +33,16 @@ func main() {
 	})
 
 	pi.Draw = func() {
+		pi.Circ(rand.Intn(128), rand.Intn(128), rand.Intn(15))
+		pi.SetColor(pi.Color(rand.Intn(33)))
 		//log.Print("pi.Draw")
 	}
 	piloop.Target().Subscribe(piloop.EventDraw, func(event piloop.Event, handler pievent.Handler) {
 		//log.Println("EventDraw received")
+	})
+
+	pikey.Target().SubscribeAll(func(event pikey.Event, handler pievent.Handler) {
+		log.Println(event)
 	})
 
 	piweb.Run()
