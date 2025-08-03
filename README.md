@@ -4,6 +4,8 @@
 
 A replacement for [piebiten](https://github.com/elgopher/pi/tree/master/piebiten) and [Ebitengine](https://ebitengine.org/).
 
+[![Play the Snake game in the browser](docs/screenshot-snake.png)](https://elgopher.itch.io/snake)
+
 ---
 
 ## 🎯 Project Goals
@@ -39,7 +41,7 @@ These improvements are possible thanks to:
 
 ## 🚧 Status
 
-> This is an experimental project. Some features are ready, some are not. Some features are buggy and generally not all possible platforms are supported:
+This is an experimental project. Some features are ready, some are not. Some features are buggy and generally not all possible platforms are supported:
 
 * [x] graphics rendering using Canvas2D
 * [x] keyboard support
@@ -50,3 +52,5 @@ These improvements are possible thanks to:
 * [x] desktop web browsers - Chrome, Firefox, Edge, Safari etc.
 * [ ] mobile web browsers - Safari, Chrome
 * [ ] audio support
+* [x] 3x smaller WASM binary - Snake game is 3 MB instead of 10 MB
+* [x] 2x faster compilation
