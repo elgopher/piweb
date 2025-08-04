@@ -23,6 +23,7 @@ var window = js.Global()
 var (
 	keyboard = StartKeyboard()
 	gamepad  = StartGamepad()
+	mouse    Mouse
 )
 
 func Run() {
@@ -33,6 +34,7 @@ func Run() {
 
 	window.Call("eval", string(gameLoopJS))
 	window.Call("eval", string(canvasJS))
-
 	window.Call("prepareCanvas")
+
+	mouse.Start(window.Get("canvas"))
 }

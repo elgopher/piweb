@@ -6,6 +6,7 @@ import (
 	"github.com/elgopher/pi/pievent"
 	"github.com/elgopher/pi/pikey"
 	"github.com/elgopher/pi/piloop"
+	"github.com/elgopher/pi/pimouse"
 	"github.com/elgopher/pi/pipad"
 	"github.com/elgopher/piweb"
 	"log"
@@ -51,6 +52,14 @@ func main() {
 	})
 
 	pipad.ButtonTarget().SubscribeAll(func(event pipad.EventButton, handler pievent.Handler) {
+		log.Println(event)
+	})
+
+	pimouse.MoveTarget().SubscribeAll(func(event pimouse.EventMove, handler pievent.Handler) {
+		log.Println(event)
+	})
+
+	pimouse.ButtonTarget().SubscribeAll(func(event pimouse.EventButton, handler pievent.Handler) {
 		log.Println(event)
 	})
 

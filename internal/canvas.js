@@ -15,6 +15,9 @@ function prepareCanvas() {
     document.body.appendChild(canvas);
     centerCanvasOnTheScreen();
     window.addEventListener("resize", resizeCanvas);
+    canvas.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+    });
 }
 
 function newCanvas() {
@@ -46,6 +49,28 @@ function screenScale() {
         scale = 1;
     }
     return scale;
+}
+
+const prevMouseXY = {X: 0, Y: 0}
+
+function addMouseMoveListener(canvas, callback) {
+    canvas.addEventListener("mousemove", (e) => {
+        // mousemove event is reported many times during a single frame.
+        // Filter events before calling Go code to avoid significant
+        // memory allocations.
+        const m = devicePixelRatio/screenScale()
+        const x = Math.floor(e.offsetX * m)
+        const y = Math.floor(e.offsetY * m)
+
+        if (prevMouseXY.x === x && prevMouseXY.y === y) {
+            return
+        }
+
+        callback(x,y)
+
+        prevMouseXY.x = x
+        prevMouseXY.y = y
+    })
 }
 
 function centerCanvasOnTheScreen() {

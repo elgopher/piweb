@@ -13,13 +13,13 @@ const maxGamepads = 4
 var navigator = window.Get("navigator")
 
 func StartGamepad() *Gamepad {
-	k := &Gamepad{}
+	g := &Gamepad{}
 	for i := 0; i < maxGamepads; i++ {
-		k.state[i] = newGamepadState()
+		g.state[i] = newGamepadState()
 	}
-	k.reusedState = newGamepadState()
-	k.Start()
-	return k
+	g.reusedState = newGamepadState()
+	g.Start()
+	return g
 }
 
 type Gamepad struct {
@@ -65,6 +65,7 @@ func (k *Gamepad) Update() {
 	}
 	k.connectionEvents = k.connectionEvents[:0]
 
+	// TODO gamepad state should be polled more often than TPS:
 	gamepadSnapshot := navigator.Call("getGamepads") // This cannot be avoided. Allocates a lot!
 
 	for i := 0; i < maxGamepads; i++ {

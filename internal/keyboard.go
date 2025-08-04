@@ -28,6 +28,7 @@ func (k *Keyboard) Start() {
 }
 
 func (k *Keyboard) keyDown(this js.Value, args []js.Value) any {
+	// TODO avoid using js.Value.String() because of allocation
 	code := args[0].Get("code").String()
 	key, found := keymap[code]
 	if !found {

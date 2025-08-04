@@ -51,6 +51,7 @@ func tick(this js.Value, args []js.Value) any {
 
 		// handling input only once
 		if i == 0 {
+			mouse.Update()
 			keyboard.Update()
 			gamepad.Update()
 		}

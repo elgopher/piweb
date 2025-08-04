@@ -12,20 +12,14 @@ A replacement for [piebiten](https://github.com/elgopher/pi/tree/master/piebiten
 
 The aim of this project is to create a new backend for [Pi](https://github.com/elgopher/pi) games that runs efficiently in modern web browsers and offers significant improvements over the standard [piebiten](https://github.com/elgopher/pi/tree/master/piebiten) backend:
 
-### 🔊 Better Audio
-
-* **Minimal latency** — as low as **20 ms** (compared to 60 ms in piebiten)
-* **Glitch-free playback** — thanks to audio processing in a high-priority, separate audio thread
-
 ### 📦 Smaller Binary Size
 
 * At least **2× smaller** `.wasm` output
 
-### ⚡ Higher Performance
+### 🔊 Better Audio
 
-* Significantly lower number of memory allocations, therefore less CPU time spent on garbage collection
-* Games will run at **higher frame rates**
-* Lower CPU usage — better performance on mobile and low-end devices
+* **Minimal latency** — as low as **20 ms** (compared to 60 ms in piebiten)
+* **Glitch-free playback** — thanks to audio processing in a high-priority, separate audio thread
 
 ---
 
@@ -46,11 +40,9 @@ This is an experimental project. Some features are ready, some are not. Some fea
 * [x] graphics rendering using Canvas2D
 * [x] keyboard support
 * [x] gamepad support
-* [ ] mouse support
+* [x] mouse support
 * [ ] debug mode support
-* [ ] on-screen keyboard support
 * [x] desktop web browsers - Chrome, Firefox, Edge, Safari etc.
-* [ ] mobile web browsers - Safari, Chrome
+* [ ] mobile web browsers - virtual keyboard and gamepad support
 * [ ] audio support
-* [x] 3x smaller WASM binary - Snake game is 3 MB instead of 10 MB
-* [x] 2x faster compilation
+* [x] 3x smaller WASM binary - Snake game is 3 MB (0.9 MB after gzip) instead of 10 MB
