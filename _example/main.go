@@ -8,6 +8,7 @@ import (
 	"github.com/elgopher/pi/piloop"
 	"github.com/elgopher/pi/pimouse"
 	"github.com/elgopher/pi/pipad"
+	"github.com/elgopher/pi/piscope"
 	"github.com/elgopher/piweb"
 	"log"
 	"math/rand"
@@ -44,24 +45,26 @@ func main() {
 	})
 
 	pikey.Target().SubscribeAll(func(event pikey.Event, handler pievent.Handler) {
-		log.Println(event)
+		//log.Println(event)
 	})
 
 	pipad.ConnectionTarget().SubscribeAll(func(event pipad.EventConnection, handler pievent.Handler) {
-		log.Println(event)
+		//log.Println(event)
 	})
 
 	pipad.ButtonTarget().SubscribeAll(func(event pipad.EventButton, handler pievent.Handler) {
-		log.Println(event)
+		//log.Println(event)
 	})
 
 	pimouse.MoveTarget().SubscribeAll(func(event pimouse.EventMove, handler pievent.Handler) {
-		log.Println(event)
+		//log.Println(event)
 	})
 
 	pimouse.ButtonTarget().SubscribeAll(func(event pimouse.EventButton, handler pievent.Handler) {
-		log.Println(event)
+		//log.Println(event)
 	})
+
+	piscope.Start()
 
 	piweb.Run()
 }

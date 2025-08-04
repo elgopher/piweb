@@ -21,7 +21,7 @@ func init() {
 // snapshotPi makes a snapshot of Pi values to avoid memory allocation
 // on each call from JS to GO.
 func snapshotPi() {
-	api.Set("tps", js.ValueOf(pi.TPS()))
+	api.Set("tps", pi.TPS())
 
 	screen := pi.Screen()
 	api.Set("screenWidth", screen.W())
@@ -47,7 +47,10 @@ func tick(this js.Value, args []js.Value) any {
 	ticks := args[0].Int()
 
 	for i := 0; i < ticks; i++ {
-		piloop.Target().Publish(piloop.EventFrameStart)
+		if !paused {
+			piloop.Target().Publish(piloop.EventFrameStart)
+		}
+		piloop.DebugTarget().Publish(piloop.EventFrameStart)
 
 		// handling input only once
 		if i == 0 {
@@ -56,13 +59,29 @@ func tick(this js.Value, args []js.Value) any {
 			gamepad.Update()
 		}
 
-		pi.Update()
-		piloop.Target().Publish(piloop.EventUpdate)
+		if !paused {
+			pi.Update()
+			piloop.Target().Publish(piloop.EventUpdate)
+		}
+		piloop.DebugTarget().Publish(piloop.EventUpdate)
+
+		if !paused {
+			piloop.Target().Publish(piloop.EventLateUpdate)
+		}
+		piloop.DebugTarget().Publish(piloop.EventLateUpdate)
 
 		if i == ticks-1 { // draw only on the last tick
 			if !skipNextDraw {
-				pi.Draw()
-				piloop.Target().Publish(piloop.EventDraw)
+				if !paused {
+					pi.Draw()
+					piloop.Target().Publish(piloop.EventDraw)
+				}
+				piloop.DebugTarget().Publish(piloop.EventDraw)
+
+				if !paused {
+					piloop.Target().Publish(piloop.EventLateDraw)
+				}
+				piloop.DebugTarget().Publish(piloop.EventLateDraw)
 
 				data := window.Get("imageData").Get("data")
 				CopyCanvasToUint8ClampedArray(data, pi.Screen())

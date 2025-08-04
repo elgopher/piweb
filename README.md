@@ -41,7 +41,7 @@ This is an experimental project. Some features are ready, some are not. Some fea
 * [x] keyboard support
 * [x] gamepad support
 * [x] mouse support
-* [ ] debug mode support
+* [x] debug mode support
 * [x] desktop web browsers - Chrome, Firefox, Edge, Safari etc.
 * [ ] mobile web browsers - virtual keyboard and gamepad support
 * [ ] audio support

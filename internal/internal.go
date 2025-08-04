@@ -6,6 +6,8 @@ package internal
 import (
 	_ "embed"
 	"github.com/elgopher/pi/piaudio"
+	"github.com/elgopher/pi/pidebug"
+	"github.com/elgopher/pi/pievent"
 	"github.com/elgopher/piweb/internal/audio"
 	"syscall/js"
 )
@@ -26,6 +28,8 @@ var (
 	mouse    Mouse
 )
 
+var paused bool
+
 func Run() {
 	piaudio.Backend = &audio.Backend{}
 
@@ -37,4 +41,13 @@ func Run() {
 	window.Call("prepareCanvas")
 
 	mouse.Start(window.Get("canvas"))
+
+	pidebug.Target().SubscribeAll(func(event pidebug.Event, handler pievent.Handler) {
+		switch event {
+		case pidebug.EventPause:
+			paused = true
+		case pidebug.EventResume:
+			paused = false
+		}
+	})
 }

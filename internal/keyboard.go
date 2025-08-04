@@ -175,7 +175,10 @@ var virtualKeys = map[pikey.Key]pikey.Key{
 
 func (k *Keyboard) Update() {
 	for _, event := range k.events {
-		pikey.Target().Publish(event)
+		if !paused {
+			pikey.Target().Publish(event)
+		}
+		pikey.DebugTarget().Publish(event)
 	}
 
 	k.events = k.events[:0]

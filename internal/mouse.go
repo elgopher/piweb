@@ -95,9 +95,15 @@ func (m *Mouse) blur(this js.Value, args []js.Value) any {
 func (m *Mouse) Update() {
 	for _, e := range m.events {
 		if e.isMove {
-			pimouse.MoveTarget().Publish(e.EventMove)
+			if !paused {
+				pimouse.MoveTarget().Publish(e.EventMove)
+			}
+			pimouse.MoveDebugTarget().Publish(e.EventMove)
 		} else {
-			pimouse.ButtonTarget().Publish(e.EventButton)
+			if !paused {
+				pimouse.ButtonTarget().Publish(e.EventButton)
+			}
+			pimouse.ButtonDebugTarget().Publish(e.EventButton)
 		}
 	}
 	m.events = m.events[:0]
