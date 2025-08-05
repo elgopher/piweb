@@ -31,10 +31,7 @@ class Ticker {
     }
 }
 
-
 function startGameLoop() {
-    api.init();
-
     const ticker = new Ticker(api.tick);
 
     requestAnimationFrame(function animationFrame(){

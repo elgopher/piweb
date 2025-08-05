@@ -19,6 +19,7 @@ func run() {
 
 	server.GoBuild = &GoBuild
 	server.ReleaseGoBuild = &ReleaseGoBuild
+	server.HtmlDir = &HtmlDir
 
 	server.Start(ctx, 8080)
 }

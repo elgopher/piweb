@@ -3,6 +3,7 @@
 <script src="gamepad.js"></script>
 <script src="gameloop.js"></script>
 <script src="canvas.js"></script>
+<script src="audio.js"></script>
 
 <script>
     window.addEventListener("load", async () => {
@@ -18,6 +19,8 @@
         const go = new Go();
         const result = await WebAssembly.instantiateStreaming(resp, go.importObject);
         go.run(result.instance);
+
+        await waitUntilAudioIsRunning();
 
         startGameLoop();
     });

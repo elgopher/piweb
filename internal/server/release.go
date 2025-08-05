@@ -23,7 +23,7 @@ func ReleaseZip() ([]byte, error) {
 	for _, file := range files {
 		content, err := GetFile(file, *ReleaseGoBuild)
 		if err != nil {
-			return nil, fmt.Errorf("getting file failed: %w", err)
+			return nil, fmt.Errorf("getting file %s failed: %w", file, err)
 		}
 		if err := addFileToZip(writer, file, content); err != nil {
 			return nil, fmt.Errorf("adding file to zip failed: %v", err)
@@ -46,16 +46,17 @@ func listReleaseFiles() ([]string, error) {
 		return nil, fmt.Errorf("error reading embedded html directory: %w", err)
 	}
 	for _, entry := range embeddedEntry {
-		files = append(files, entry.Name())
+		if !entry.IsDir() {
+			files = append(files, entry.Name())
+		}
 	}
 
-	workdir, _ := os.Getwd()
-	workdirEntries, err := os.ReadDir(workdir)
+	workdirEntries, err := os.ReadDir(*HtmlDir)
 	if err != nil {
 		return nil, fmt.Errorf("error reading working directory: %w", err)
 	}
 	for _, entry := range workdirEntries {
-		if filepath.Ext(entry.Name()) != ".go" {
+		if filepath.Ext(entry.Name()) != ".go" && !entry.IsDir() {
 			files = append(files, entry.Name())
 		}
 	}

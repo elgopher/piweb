@@ -31,3 +31,5 @@ To run your WebAssembly game in the browser with live reloading:
 1. Go to http://localhost:8080/release.zip
 2. Download the archive
 3. Upload the archive to itch.io, newgrounds.com etc.
+
+   Make sure to configure those services to use **SharedArrayBuffer**. 
