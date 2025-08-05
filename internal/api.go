@@ -4,17 +4,18 @@
 package internal
 
 import (
-	"github.com/elgopher/pi"
-	"github.com/elgopher/pi/piloop"
 	"syscall/js"
 	"time"
+
+	"github.com/elgopher/pi"
+	"github.com/elgopher/pi/piloop"
+	"github.com/elgopher/piweb/internal/audio"
 )
 
 // api provides functions available in JavaScript code
 var api = window.Get("Object").New()
 
 func init() {
-	api.Set("init", js.FuncOf(piInit))
 	api.Set("tick", js.FuncOf(tick))
 }
 
@@ -28,15 +29,6 @@ func snapshotPi() {
 	api.Set("screenHeight", screen.H())
 }
 
-func piInit(this js.Value, args []js.Value) any {
-	if pi.Init != nil {
-		pi.Init()
-	}
-	piloop.Target().Publish(piloop.EventInit)
-
-	return nil
-}
-
 // When true, indicates that the last update+draw cycle
 // exceeded the tick duration of 1/TPS (e.g., 33 ms for TPS=30).
 var skipNextDraw bool
@@ -47,6 +39,8 @@ func tick(this js.Value, args []js.Value) any {
 	ticks := args[0].Int()
 
 	for i := 0; i < ticks; i++ {
+		audio.UpdateTime()
+
 		if !paused {
 			piloop.Target().Publish(piloop.EventFrameStart)
 		}
@@ -83,9 +77,7 @@ func tick(this js.Value, args []js.Value) any {
 				}
 				piloop.DebugTarget().Publish(piloop.EventLateDraw)
 
-				data := window.Get("imageData").Get("data")
-				CopyCanvasToUint8ClampedArray(data, pi.Screen())
-				window.Call("updateCanvas")
+				updateImageData()
 			} else {
 				skipNextDraw = false
 			}
@@ -93,6 +85,8 @@ func tick(this js.Value, args []js.Value) any {
 
 		pi.Time += 1.0 / float64(pi.TPS())
 		pi.Frame++
+
+		audio.SendCommands()
 	}
 
 	elapsed := time.Since(started).Seconds()
@@ -103,4 +97,10 @@ func tick(this js.Value, args []js.Value) any {
 	snapshotPi()
 
 	return nil
+}
+
+func updateImageData() {
+	data := window.Get("imageData").Get("data")
+	CopyCanvasToUint8ClampedArray(data, pi.Screen())
+	window.Call("updateCanvas")
 }
