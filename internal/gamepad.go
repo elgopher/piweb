@@ -4,31 +4,26 @@
 package internal
 
 import (
-	"github.com/elgopher/pi/pipad"
 	"syscall/js"
+
+	"github.com/elgopher/pi/pipad"
 )
 
-const maxGamepads = 4
-
-var navigator = window.Get("navigator")
-
-func StartGamepad() *Gamepad {
+func StartGamepad(events *ByteBuffer) *Gamepad {
 	g := &Gamepad{}
-	for i := 0; i < maxGamepads; i++ {
-		g.state[i] = newGamepadState()
-	}
-	g.reusedState = newGamepadState()
-	g.Start()
+	g.Start(events)
 	return g
 }
 
 type Gamepad struct {
 	connectionEvents []pipad.EventConnection
-	state            [maxGamepads]gamepadState
-	reusedState      gamepadState // to avoid allocation
+
+	events *ByteBuffer
 }
 
-func (k *Gamepad) Start() {
+func (k *Gamepad) Start(events *ByteBuffer) {
+	k.events = events
+
 	window.Call("addEventListener", "gamepadconnected", js.FuncOf(k.gamepadconnected))
 	window.Call("addEventListener", "gamepaddisconnected ", js.FuncOf(k.gamepaddisconnected))
 }
@@ -65,44 +60,25 @@ func (k *Gamepad) Update() {
 	}
 	k.connectionEvents = k.connectionEvents[:0]
 
-	// TODO gamepad state should be polled more often than TPS:
-	gamepadSnapshot := navigator.Call("getGamepads") // This cannot be avoided. Allocates a lot!
+	k.events.Read()
+	data := k.events.Data()
 
-	for i := 0; i < maxGamepads; i++ {
-		k.getGamepadState(gamepadSnapshot.Index(i), k.reusedState)
-		k.state[i].PublishEvents(k.reusedState, i)
-	}
-}
+	for i := 0; i < len(data)-2; i += 3 {
+		event := data[i : i+3]
+		var eventType = pipad.EventUp
+		if event[0] == 2 {
+			eventType = pipad.EventDown
+		}
+		padIndex := event[1]
+		button := gamepadMapping[int(event[2])]
 
-func (k *Gamepad) getGamepadState(gamepad js.Value, out gamepadState) {
-	if gamepad.Truthy() {
-		buttons := gamepad.Get("buttons")
-
-		for webBtn, pipadBtn := range gamepadMapping {
-			out[pipadBtn] = buttons.Index(webBtn).Get("pressed").Bool()
+		newEvent := pipad.EventButton{
+			Type:   eventType,
+			Player: int(padIndex),
+			Button: button,
 		}
 
-		axes := gamepad.Get("axes")
-
-		verticalAxis := axes.Index(1).Float()
-		if verticalAxis > 0.5 {
-			out[pipad.Bottom] = true
-		}
-		if verticalAxis < -0.5 {
-			out[pipad.Top] = true
-		}
-
-		horizontalAxis := axes.Index(0).Float()
-		if horizontalAxis > 0.5 {
-			out[pipad.Right] = true
-		}
-		if horizontalAxis < -0.5 {
-			out[pipad.Left] = true
-		}
-	} else {
-		for _, button := range gamepadMapping {
-			out[button] = false
-		}
+		pipad.ButtonTarget().Publish(newEvent)
 	}
 }
 
@@ -115,35 +91,4 @@ var gamepadMapping = map[int]pipad.Button{
 	13: pipad.Bottom,
 	14: pipad.Left,
 	15: pipad.Right,
-}
-
-func newGamepadState() gamepadState {
-	out := gamepadState{}
-	for _, pipadBtn := range gamepadMapping {
-		out[pipadBtn] = false
-	}
-	return out
-}
-
-type gamepadState map[pipad.Button]bool
-
-func (s gamepadState) PublishEvents(newState gamepadState, player int) {
-	for button, oldBtnState := range s {
-		newBtnState := newState[button]
-		if newBtnState != oldBtnState {
-			eventType := pipad.EventDown
-			if !newBtnState {
-				eventType = pipad.EventUp
-			}
-
-			event := pipad.EventButton{
-				Type:   eventType,
-				Button: button,
-				Player: player,
-			}
-			pipad.ButtonTarget().Publish(event)
-
-			s[button] = newBtnState
-		}
-	}
 }

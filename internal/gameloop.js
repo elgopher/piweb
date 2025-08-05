@@ -9,14 +9,10 @@ class Ticker {
 
     constructor(tickCallback) {
         this.tickCallback = tickCallback;
-    }
-
-    start() {
         this.#tickStartTime = performance.now();
-        requestAnimationFrame(this.#frame);
     }
 
-    #frame = () => {
+    onAnimationFrame = () => {
         const tickDuration = 1000 / api.tps;
         const now = performance.now();
 
@@ -32,8 +28,6 @@ class Ticker {
             this.tickCallback(actualTicks);
             this.#tickStartTime = this.#tickStartTime + tickDuration * ticks;
         }
-
-        requestAnimationFrame(this.#frame);
     }
 }
 
@@ -42,5 +36,12 @@ class Ticker {
     api.init();
 
     const ticker = new Ticker(api.tick);
-    ticker.start();
+
+    requestAnimationFrame(function animationFrame(){
+        gamepad.onAnimationFrame();
+        ticker.onAnimationFrame();
+
+        requestAnimationFrame(animationFrame);
+    });
+
 })()

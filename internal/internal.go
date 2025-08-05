@@ -5,14 +5,21 @@ package internal
 
 import (
 	_ "embed"
+	"syscall/js"
+
 	"github.com/elgopher/pi/piaudio"
 	"github.com/elgopher/pi/pidebug"
 	"github.com/elgopher/pi/pievent"
 	"github.com/elgopher/piweb/internal/audio"
-	"syscall/js"
 )
 
 var (
+	//go:embed "bytebuffer.js"
+	bytebufferJS []byte
+
+	//go:embed "gamepad.js"
+	gamepadsJS []byte
+
 	//go:embed "gameloop.js"
 	gameLoopJS []byte
 
@@ -24,7 +31,7 @@ var window = js.Global()
 
 var (
 	keyboard = StartKeyboard()
-	gamepad  = StartGamepad()
+	gamepad  *Gamepad
 	mouse    Mouse
 )
 
@@ -36,8 +43,14 @@ func Run() {
 	window.Set("api", api)
 	snapshotPi()
 
+	window.Call("eval", string(bytebufferJS))
+	window.Call("eval", string(gamepadsJS))
 	window.Call("eval", string(gameLoopJS))
 	window.Call("eval", string(canvasJS))
+
+	eventsByteBuffer := NewByteBuffer(window.Get("gamepad").Get("events"))
+	gamepad = StartGamepad(eventsByteBuffer)
+
 	window.Call("prepareCanvas")
 
 	mouse.Start(window.Get("canvas"))
