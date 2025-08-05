@@ -26,6 +26,8 @@ var (
 	ReleaseGoBuild *string
 )
 
+var HtmlDir *string
+
 func GetFile(file string, goBuild string) ([]byte, error) {
 	if file == "wasm_exec.js" {
 		return wasmExecJS, nil
@@ -35,9 +37,8 @@ func GetFile(file string, goBuild string) ([]byte, error) {
 		return compiler.BuildMainWasm(goBuild)
 	}
 
-	workdir, _ := os.Getwd()
-	workdirFile := filepath.Join(workdir, file)
-	content, err := os.ReadFile(workdirFile)
+	htmlFile := filepath.Join(*HtmlDir, file)
+	content, err := os.ReadFile(htmlFile)
 	if err == nil {
 		return process(file, content), nil
 	}

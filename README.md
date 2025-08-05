@@ -1,6 +1,6 @@
 # piweb
 
-**Experimental Pi backend for web browsers.**
+**Pi backend for web browsers.**
 
 A replacement for [piebiten](https://github.com/elgopher/pi/tree/master/piebiten) and [Ebitengine](https://ebitengine.org/).
 
@@ -28,6 +28,7 @@ The aim of this project is to create a new backend for [Pi](https://github.com/e
 These improvements are possible thanks to:
 
 * **Audio Worklet API** – the browser-native API for real-time, low-latency audio processing
+* **SharedArrayBuffer** - a high-performance way to exchange data between the main thread and audio processor in the browser.
 * Writing the code directly in **JavaScript**
 * Reducing the number of dependencies
 
@@ -35,7 +36,7 @@ These improvements are possible thanks to:
 
 ## 🚧 Status
 
-This is an experimental project. Some features are ready, some are not. Some features are buggy and generally not all possible platforms are supported:
+The project is ready to use. Most features are ready. Some platforms are not supported yet though:
 
 * [x] graphics rendering using Canvas2D
 * [x] keyboard support
@@ -44,5 +45,13 @@ This is an experimental project. Some features are ready, some are not. Some fea
 * [x] debug mode support
 * [x] desktop web browsers - Chrome, Firefox, Edge, Safari etc.
 * [ ] mobile web browsers - virtual keyboard and gamepad support
-* [ ] audio support
+* [x] audio support 
 * [x] 3x smaller WASM binary - Snake game is 3 MB (0.9 MB after gzip) instead of 10 MB
+* [x] customizable template - developer can change all static files - HTML, CSS, JS etc.
+* [x] works on itch.io and newgrounds.com
+* [x] embedded HTTP server for rapid development
+* [x] ability to release ZIP file 
+  * [x] with embedded HTTP server
+  * [ ] with CLI
+* [ ] documentation
+* [ ] automated tests
