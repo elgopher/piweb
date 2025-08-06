@@ -4,21 +4,22 @@
 
 To run your WebAssembly game in the browser with live reloading:
 
-1. Install `wasmserve`:
-
-   ```bash
-   go install github.com/hajimehoshi/wasmserve@latest
-   ```
-
-2. Start the server in this directory:
+1. Start the web server in this directory:
 
    ```bash
    cd _example
-   wasmserve
+   go run .
    ```
 
-3. Open your browser and go to:
+2. Open your browser and go to:
 
    ```
    http://localhost:8080
    ```
+
+3. **Refresh** the browser to recompile the code and restart the game
+
+# How to change the template
+
+1. You can modify all static files like index.html, main.css etc.
+2. Just put the altered file into _example directory. You can find all default static files in [html directory](../internal/server/html)

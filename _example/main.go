@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"math/rand"
+
 	"github.com/elgopher/pi"
 	"github.com/elgopher/pi/picofont"
 	"github.com/elgopher/pi/pievent"
@@ -10,8 +13,6 @@ import (
 	"github.com/elgopher/pi/pipad"
 	"github.com/elgopher/pi/piscope"
 	"github.com/elgopher/piweb"
-	"log"
-	"math/rand"
 )
 
 func main() {
