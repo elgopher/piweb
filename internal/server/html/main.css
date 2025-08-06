@@ -3,5 +3,17 @@
  * This code is licensed under MIT license (see LICENSE for details)
  */
 
+html {
+    height: 100%;
+}
+
 body {
+    margin: 0;
+    display: grid;
+    place-items: center;
+    height: 100%;
+}
+
+canvas {
+    image-rendering: pixelated;
 }

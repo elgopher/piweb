@@ -13,7 +13,6 @@ function prepareCanvas() {
     canvas = newCanvas();
     resizeCanvas();
     document.body.appendChild(canvas);
-    centerCanvasOnTheScreen();
     window.addEventListener("resize", resizeCanvas);
     canvas.addEventListener("contextmenu", (e) => {
         e.preventDefault();
@@ -21,10 +20,7 @@ function prepareCanvas() {
 }
 
 function newCanvas() {
-    const canvas = document.createElement("canvas");
-    const css = canvas.style;
-    css.imageRendering = "pixelated";
-    return canvas;
+    return document.createElement("canvas");
 }
 
 function resizeCanvas() {
@@ -71,15 +67,6 @@ function addMouseMoveListener(canvas, callback) {
         prevMouseXY.x = x
         prevMouseXY.y = y
     })
-}
-
-function centerCanvasOnTheScreen() {
-    document.documentElement.style.height = "100%";
-    const body = document.body.style;
-    body.margin = "0px";
-    body.display = "grid";
-    body.placeItems = "center";
-    body.height = "100%";
 }
 
 function updateCanvas() {
