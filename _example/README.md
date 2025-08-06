@@ -24,3 +24,10 @@ To run your WebAssembly game in the browser with live reloading:
 1. You can modify all files like index.html, main.css etc.
 2. Just put the altered file into _example directory. You can find all default files in [html directory](../internal/server/html)
 3. Of course, you can add new files as well.
+
+
+# How to release production build
+
+1. Go to http://localhost:8080/release.zip
+2. Download the archive
+3. Upload the archive to itch.io, newgrounds.com etc.

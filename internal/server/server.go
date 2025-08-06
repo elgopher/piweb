@@ -16,7 +16,7 @@ func Start(ctx context.Context, port int) {
 
 	log.Printf("Starting web server on http://%s", addr)
 
-	server := &http.Server{Addr: addr, Handler: newHandler()}
+	server := &http.Server{Addr: addr, Handler: &Handler{}}
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil {
