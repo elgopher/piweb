@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright 2025 Jacek Olszak
+  ~ This code is licensed under MIT license (see LICENSE for details)
+  -->
+
+<!DOCTYPE html>
+<link rel="stylesheet" href="main.css"/>
+<script src="wasm_exec.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const resp = await fetch("main.wasm");
+        if (!resp.ok) {
+            const errorElement = document.createElement('pre');
+            errorElement.innerText = await resp.text();
+            document.body.appendChild(errorElement);
+            return;
+        }
+
+        const go = new Go();
+        const result = await WebAssembly.instantiateStreaming(resp, go.importObject);
+        go.run(result.instance);
+    });
+</script>
