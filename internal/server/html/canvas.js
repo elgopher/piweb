@@ -6,21 +6,15 @@
 // piweb scales the canvas by using CSS styles, though.
 // piweb uses pixel-perfect integer scaling.
 
-var canvas = newCanvas();
+var canvas = document.getElementById("canvas");
 var imageData; // https://developer.mozilla.org/en-US/docs/Web/API/ImageData
 
 function prepareCanvas() {
-    canvas = newCanvas();
     resizeCanvas();
-    document.body.appendChild(canvas);
     window.addEventListener("resize", resizeCanvas);
     canvas.addEventListener("contextmenu", (e) => {
         e.preventDefault();
     });
-}
-
-function newCanvas() {
-    return document.createElement("canvas");
 }
 
 function resizeCanvas() {
