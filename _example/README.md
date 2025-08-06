@@ -21,5 +21,6 @@ To run your WebAssembly game in the browser with live reloading:
 
 # How to change the template
 
-1. You can modify all static files like index.html, main.css etc.
+1. You can modify all files like index.html, main.css etc.
 2. Just put the altered file into _example directory. You can find all default static files in [html directory](../internal/server/html)
+3. Of course, you can add new files as well.

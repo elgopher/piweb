@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/elgopher/piweb/internal/server/compiler"
+	"github.com/elgopher/piweb/internal/server/indexhtml"
 	"github.com/elgopher/piweb/internal/server/wasmexecjs"
 )
 
@@ -72,6 +73,10 @@ func (h *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 }
 
 func writeContent(file string, content []byte, writer http.ResponseWriter) {
+	if file == "index.html" {
+		content = indexhtml.PutScripts(content)
+	}
+
 	contentType := mime.TypeByExtension(filepath.Ext(file))
 	writer.Header().Set("Content-Type", contentType)
 

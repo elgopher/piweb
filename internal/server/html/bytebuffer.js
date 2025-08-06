@@ -24,5 +24,3 @@ class ByteBuffer {
         return this.#len;
     }
 }
-
-window.ByteBuffer = ByteBuffer;

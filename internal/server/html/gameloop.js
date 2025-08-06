@@ -32,7 +32,7 @@ class Ticker {
 }
 
 
-(function startGameLoop() {
+function startGameLoop() {
     api.init();
 
     const ticker = new Ticker(api.tick);
@@ -43,5 +43,4 @@ class Ticker {
 
         requestAnimationFrame(animationFrame);
     });
-
-})()
+}

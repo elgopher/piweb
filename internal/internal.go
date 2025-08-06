@@ -13,20 +13,6 @@ import (
 	"github.com/elgopher/piweb/internal/audio"
 )
 
-var (
-	//go:embed "bytebuffer.js"
-	bytebufferJS []byte
-
-	//go:embed "gamepad.js"
-	gamepadsJS []byte
-
-	//go:embed "gameloop.js"
-	gameLoopJS []byte
-
-	//go:embed "canvas.js"
-	canvasJS []byte
-)
-
 var window = js.Global()
 
 var (
@@ -42,11 +28,6 @@ func Run() {
 
 	window.Set("api", api)
 	snapshotPi()
-
-	window.Call("eval", string(bytebufferJS))
-	window.Call("eval", string(gamepadsJS))
-	window.Call("eval", string(gameLoopJS))
-	window.Call("eval", string(canvasJS))
 
 	eventsByteBuffer := NewByteBuffer(window.Get("gamepad").Get("events"))
 	gamepad = StartGamepad(eventsByteBuffer)
