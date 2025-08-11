@@ -4,10 +4,11 @@
 package internal
 
 import (
-	"github.com/elgopher/pi"
-	"github.com/elgopher/pi/piloop"
 	"syscall/js"
 	"time"
+
+	"github.com/elgopher/pi"
+	"github.com/elgopher/pi/piloop"
 )
 
 // api provides functions available in JavaScript code
