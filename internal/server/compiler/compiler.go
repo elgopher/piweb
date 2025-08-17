@@ -14,6 +14,8 @@ import (
 	"strings"
 )
 
+var wasmFilePrefix = []byte("\x00asm")
+
 func BuildMainWasm() ([]byte, error) {
 	outputPath := filepath.Join(tmpDir, "main.wasm")
 
@@ -50,6 +52,12 @@ func BuildMainWasm() ([]byte, error) {
 	content, err := os.ReadFile(outputPath)
 	if err != nil {
 		return nil, fmt.Errorf("Problem reading file %s: %w", outputPath, err)
+	}
+
+	// ensure real WASM was created
+	if !bytes.HasPrefix(content, wasmFilePrefix) {
+		workdir, _ := os.Getwd()
+		return nil, fmt.Errorf("Package main not found in the current working directory: %s", workdir)
 	}
 
 	return content, nil
