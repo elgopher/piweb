@@ -6,6 +6,7 @@ package compiler
 import (
 	"bytes"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 	"os/exec"
@@ -16,14 +17,17 @@ import (
 
 var wasmFilePrefix = []byte("\x00asm")
 
-func BuildMainWasm() ([]byte, error) {
+func BuildMainWasm(goBuildCommand string) ([]byte, error) {
 	outputPath := filepath.Join(tmpDir, "main.wasm")
 
 	// Run `go build .`
-	args := []string{"build", "-o", outputPath, "."}
-	log.Print("Running go ", strings.Join(args, " "))
+	args, err := parseGoBuildCommand(goBuildCommand, outputPath)
+	if err != nil {
+		return nil, err
+	}
+	log.Print("Running ", strings.Join(args, " "))
 
-	cmd := exec.Command("go", args...)
+	cmd := exec.Command(args[0], args[1:]...)
 
 	cmd.Env = os.Environ()
 	cmd.Env = slices.DeleteFunc(cmd.Env, func(v string) bool {
@@ -51,7 +55,7 @@ func BuildMainWasm() ([]byte, error) {
 
 	content, err := os.ReadFile(outputPath)
 	if err != nil {
-		return nil, fmt.Errorf("Problem reading file %s: %w", outputPath, err)
+		return nil, fmt.Errorf("Problem reading output file %s: %w", outputPath, err)
 	}
 
 	// ensure real WASM was created
@@ -61,6 +65,27 @@ func BuildMainWasm() ([]byte, error) {
 	}
 
 	return content, nil
+}
+
+func parseGoBuildCommand(command string, outputPath string) ([]string, error) {
+	tmpl, err := template.New("").Parse(command)
+	if err != nil {
+		return nil, fmt.Errorf("problem parsing go build command %s: %w", command, err)
+	}
+
+	var evaluatedCommand bytes.Buffer
+	err = tmpl.Execute(&evaluatedCommand, struct {
+		Output string
+	}{
+		Output: outputPath,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("problem evaluating go build command %s: %w", command, err)
+	}
+
+	args := strings.Split(evaluatedCommand.String(), " ")
+
+	return args, nil
 }
 
 var tmpDir = func() string {

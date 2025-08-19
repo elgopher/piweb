@@ -17,5 +17,8 @@ func run() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer stop()
 
+	server.GoBuild = &GoBuild
+	server.ReleaseGoBuild = &ReleaseGoBuild
+
 	server.Start(ctx, 8080)
 }

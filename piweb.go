@@ -3,6 +3,11 @@
 
 package piweb
 
+var (
+	GoBuild        = "go build -buildvcs=false -o {{.Output}} ." // executed on each webpage refresh.
+	ReleaseGoBuild = "go build -o {{.Output}} ."                 // executed when creating release build.
+)
+
 func Run() {
 	run()
 }

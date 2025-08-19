@@ -21,13 +21,18 @@ var wasmExecJS = wasmexecjs.Get()
 
 var ErrNotFound = errors.New("not found")
 
-func GetFile(file string) ([]byte, error) {
+var (
+	GoBuild        *string
+	ReleaseGoBuild *string
+)
+
+func GetFile(file string, goBuild string) ([]byte, error) {
 	if file == "wasm_exec.js" {
 		return wasmExecJS, nil
 	}
 
 	if file == "main.wasm" {
-		return compiler.BuildMainWasm()
+		return compiler.BuildMainWasm(goBuild)
 	}
 
 	workdir, _ := os.Getwd()
