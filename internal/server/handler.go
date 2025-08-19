@@ -33,7 +33,7 @@ func (h *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		file = "index.html"
 	}
 
-	content, err := GetFile(file)
+	content, err := GetFile(file, *GoBuild)
 	if err != nil {
 		if errors.Is(err, ErrNotFound) {
 			writer.WriteHeader(404)

@@ -21,7 +21,7 @@ func ReleaseZip() ([]byte, error) {
 	}
 
 	for _, file := range files {
-		content, err := GetFile(file)
+		content, err := GetFile(file, *ReleaseGoBuild)
 		if err != nil {
 			return nil, fmt.Errorf("getting file failed: %w", err)
 		}
