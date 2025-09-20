@@ -4,8 +4,9 @@
 package internal
 
 import (
-	"github.com/elgopher/pi/pikey"
 	"syscall/js"
+
+	"github.com/elgopher/pi/pikey"
 )
 
 func StartKeyboard() *Keyboard {
@@ -159,16 +160,16 @@ var keymap = map[string]pikey.Key{
 	"Slash":        pikey.Slash,
 	"Space":        pikey.Space,
 	"Tab":          pikey.Tab,
-	"Alt":          pikey.Alt,     // virtual key
-	"Control":      pikey.Control, // virtual key
-	"Shift":        pikey.Shift,   // virtual key
+	"Alt":          pikey.Alt,   // virtual key
+	"Control":      pikey.Ctrl,  // virtual key
+	"Shift":        pikey.Shift, // virtual key
 }
 
 var virtualKeys = map[pikey.Key]pikey.Key{
 	pikey.AltLeft:    pikey.Alt,
 	pikey.AltRight:   pikey.Alt,
-	pikey.CtrlLeft:   pikey.Control,
-	pikey.CtrlRight:  pikey.Control,
+	pikey.CtrlLeft:   pikey.Ctrl,
+	pikey.CtrlRight:  pikey.Ctrl,
 	pikey.ShiftLeft:  pikey.Shift,
 	pikey.ShiftRight: pikey.Shift,
 }
